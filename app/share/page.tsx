@@ -25,14 +25,17 @@ function ShareForm() {
   const handleSubmit = async () => {
     if (!user || !url) return;
     setSubmitting(true);
-    await fetch("/api/posts", {
+    const res = await fetch("/api/posts", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-api-key": process.env.NEXT_PUBLIC_SHORTCUT_API_KEY || "",
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ instagram_url: url, shared_by: user, comment }),
     });
+    if (!res.ok) {
+      const err = await res.json();
+      alert("오류: " + (err.error || "알 수 없는 오류"));
+      setSubmitting(false);
+      return;
+    }
     setDone(true);
     setTimeout(() => router.push("/"), 1500);
   };

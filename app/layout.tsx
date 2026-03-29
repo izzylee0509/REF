@@ -4,6 +4,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "EO Reference",
   description: "EO 디자인팀 레퍼런스 공유",
+  manifest: "/manifest.json",
 };
 
 export default function RootLayout({

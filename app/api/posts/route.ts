@@ -23,7 +23,7 @@ async function getInstagramPreview(url: string) {
 
 export async function POST(req: NextRequest) {
   const apiKey = req.headers.get("x-api-key");
-  if (apiKey !== process.env.SHORTCUT_API_KEY) {
+  if (apiKey !== process.env.SHORTCUT_API_KEY && apiKey !== process.env.NEXT_PUBLIC_SHORTCUT_API_KEY) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

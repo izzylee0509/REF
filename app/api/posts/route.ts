@@ -8,13 +8,14 @@ const supabase = createClient(
 
 async function getInstagramPreview(url: string) {
   try {
-    const oembedUrl = `https://api.instagram.com/oembed?url=${encodeURIComponent(url)}&maxwidth=640`;
-    const res = await fetch(oembedUrl);
+    const res = await fetch(`https://api.microlink.io?url=${encodeURIComponent(url)}`, {
+      headers: { "x-api-key": "" },
+    });
     if (!res.ok) return { thumbnail_url: null, caption: null };
     const data = await res.json();
     return {
-      thumbnail_url: data.thumbnail_url ?? null,
-      caption: data.title ?? null,
+      thumbnail_url: data.data?.image?.url ?? data.data?.screenshot?.url ?? null,
+      caption: data.data?.description ?? data.data?.title ?? null,
     };
   } catch {
     return { thumbnail_url: null, caption: null };

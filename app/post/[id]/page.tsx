@@ -6,8 +6,6 @@ import { supabase } from "@/lib/supabase";
 type Post = {
   id: string;
   instagram_url: string;
-  thumbnail_url: string | null;
-  caption: string | null;
   shared_by: string;
   comment: string | null;
   created_at: string;
@@ -19,6 +17,28 @@ type Comment = {
   content: string;
   created_at: string;
 };
+
+function InstagramEmbed({ url }: { url: string }) {
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "https://www.instagram.com/embed.js";
+    script.async = true;
+    document.body.appendChild(script);
+    return () => { document.body.removeChild(script); };
+  }, []);
+
+  // 깔끔한 URL로 정리
+  const cleanUrl = url.split("?")[0].replace(/\/$/, "") + "/";
+
+  return (
+    <blockquote
+      className="instagram-media"
+      data-instgrm-permalink={cleanUrl}
+      data-instgrm-version="14"
+      style={{ maxWidth: "100%", width: "100%", margin: "0 auto" }}
+    />
+  );
+}
 
 export default function PostPage() {
   const { id } = useParams<{ id: string }>();
@@ -86,29 +106,6 @@ export default function PostPage() {
         ← 뒤로
       </button>
 
-      {/* 썸네일 */}
-      {post.thumbnail_url ? (
-        <img
-          src={post.thumbnail_url}
-          alt="Instagram post"
-          className="w-full rounded-xl object-cover mb-4"
-        />
-      ) : (
-        <div className="w-full aspect-square bg-zinc-800 rounded-xl flex items-center justify-center mb-4">
-          <span className="text-zinc-500 text-sm">미리보기 없음</span>
-        </div>
-      )}
-
-      {/* 원본 링크 */}
-      <a
-        href={post.instagram_url}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="text-xs text-zinc-400 hover:text-white transition mb-4 block"
-      >
-        인스타그램에서 보기 →
-      </a>
-
       {/* 공유자 정보 */}
       <div className="flex items-center justify-between mb-3">
         <span className="text-sm font-medium text-white">{post.shared_by}</span>
@@ -117,10 +114,15 @@ export default function PostPage() {
 
       {/* 공유 코멘트 */}
       {post.comment && (
-        <p className="text-sm text-zinc-300 bg-zinc-900 rounded-xl px-4 py-3 mb-6">
+        <p className="text-sm text-zinc-300 bg-zinc-900 rounded-xl px-4 py-3 mb-4">
           {post.comment}
         </p>
       )}
+
+      {/* 인스타그램 임베드 */}
+      <div className="mb-6">
+        <InstagramEmbed url={post.instagram_url} />
+      </div>
 
       {/* 댓글 */}
       <div className="border-t border-zinc-800 pt-4">
@@ -128,9 +130,7 @@ export default function PostPage() {
         <div className="flex flex-col gap-3 mb-6">
           {comments.map((c) => (
             <div key={c.id} className="flex gap-2">
-              <span className="text-xs font-medium text-white shrink-0">
-                {c.author}
-              </span>
+              <span className="text-xs font-medium text-white shrink-0">{c.author}</span>
               <span className="text-xs text-zinc-300">{c.content}</span>
             </div>
           ))}

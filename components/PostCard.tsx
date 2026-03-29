@@ -21,13 +21,21 @@ export default function PostCard({ post }: { post: Post }) {
   return (
     <Link href={`/post/${post.id}`}>
       <div className="bg-zinc-900 rounded-xl overflow-hidden hover:bg-zinc-800 transition cursor-pointer">
-        <div className="w-full aspect-square bg-zinc-800 flex flex-col items-center justify-center gap-2">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#52525b" strokeWidth="1.5">
-            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
-            <circle cx="12" cy="12" r="4"/>
-            <circle cx="17.5" cy="6.5" r="1" fill="#52525b" stroke="none"/>
-          </svg>
-        </div>
+        {post.thumbnail_url ? (
+          <img
+            src={post.thumbnail_url}
+            alt="Instagram post"
+            className="w-full aspect-square object-cover"
+          />
+        ) : (
+          <div className="w-full aspect-square bg-zinc-800 flex items-center justify-center">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#52525b" strokeWidth="1.5">
+              <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+              <circle cx="12" cy="12" r="4"/>
+              <circle cx="17.5" cy="6.5" r="1" fill="#52525b" stroke="none"/>
+            </svg>
+          </div>
+        )}
         <div className="p-3">
           <div className="flex items-center justify-between mb-1">
             <span className="text-xs font-medium text-zinc-400">{post.shared_by}</span>

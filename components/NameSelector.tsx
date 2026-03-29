@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 
-const TEAM = ["Izzy", "팀원2", "팀원3"];
+const TEAM = ["Izzy", "Jay", "Soyoung"];
 
 export default function NameSelector({
   onSelect,
